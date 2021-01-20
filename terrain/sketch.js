@@ -2,6 +2,7 @@
 
 let rectHeights;
 let bikeLocation = 0;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   rectHeights = generateHeights();
@@ -9,30 +10,29 @@ function setup() {
 
 function draw() {
   background(220);
-  fill("black")
-  let howMany = 100;
-  for (let i = bikeLocation; i < bikeLocation + howMany; i ++){
+
+  let howMany = width;
+  for (let i=bikeLocation; i<bikeLocation+howMany; i++) {
     let rectWidth = width / howMany;
-    rect(rectWidth * (i - bikeLocation), height-rectHeights[i], rectWidth, rectHeights[i])
+    rect(rectWidth*(i-bikeLocation), height-rectHeights[i], 
+         rectWidth, rectHeights[i]);
   }
 
-  if (keyIsPressed){
-    if (key === "d"){
-      bikeLocation ++;
+  if (keyIsPressed) {
+    if (key === "d") {
+      bikeLocation += 5;
     }
-    if (key === "a"){
+    if (key === "a" && bikeLocation > 0) {
       bikeLocation -= 5;
     }
   }
-
 }
 
 function generateHeights() {
   let theHeights = [];
-  for (let i = 0; i < 5000; i ++){
-    let rectHeights = noise(i*0.00001) * height;
-    theHeights.push(rectHeights);
+  for (let i=0; i<5000; i++) {
+    let rectHeight = noise(i*0.001) * height;
+    theHeights.push(rectHeight);
   }
   return theHeights;
-
-}
+} 
