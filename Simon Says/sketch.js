@@ -63,7 +63,7 @@ function displayGrid() {
       
       }
       if (grid[y][x] === 1) {
-        fill("green");
+        image(xImage, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
       }
       rect(x*cellWidth, y*cellHeight, cellWidth, cellHeight);
     }
