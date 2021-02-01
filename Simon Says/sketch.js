@@ -6,6 +6,7 @@ let rows, cols, cellWidth, cellHeight;
 let bgMusic; 
 let clickSound;
 let xImage;
+let turns = 0;
 
 function preload() {
   bgMusic = loadSound("assets/background.mp3");
@@ -27,7 +28,7 @@ function setup() {
 
 function draw() {
   background(220);
-  displayGrid();
+  displayGrid(); 
 }
 
 function mousePressed() {
@@ -36,6 +37,10 @@ function mousePressed() {
 
   if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0) { // only makes a sound when in the grid
     clickSound.play();
+    turns += 1;
+  }
+  if (turns > 3) {
+    checkWinner();
   }
 
   toggleCell(x, y);   //self
@@ -81,3 +86,19 @@ function createEmptyGrid(cols, rows) {
   return empty;
 }
 
+function checkWinner() {
+  let winCondition = 0;
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; y < rows; x++){
+      if (grid[y][x] === 1) {
+        winCondition++;
+      }
+    }
+    if (winCondition === 3) {
+      console.log("you win");
+    }
+    else {
+      winCondtion = 0;
+    }
+  }
+}
