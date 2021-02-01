@@ -39,10 +39,9 @@ function mousePressed() {
     clickSound.play();
     turns += 1;
   }
-  if (turns >= 3) {
+  if (turns > 3) {
     checkWinner();
   }
-  toggleCell(x, y);   //self
 }
 
 function toggleCell(x, y) {
@@ -63,7 +62,7 @@ function displayGrid() {
       
       }
       if (grid[y][x] === 1) {
-        image(xImage, x*cellWidth, y*cellHeight, cellWidth, cellHeight);
+        fill("green");
       }
       rect(x*cellWidth, y*cellHeight, cellWidth, cellHeight);
     }
