@@ -2,18 +2,18 @@
 
 let grid = createEmptyGrid(3, 3);
 let rows, cols, cellWidth, cellHeight;
-
+ 
 let bgMusic; 
 let clickSound;
 let xImage;
 let turns = 0;
-
+ 
 function preload() {
   bgMusic = loadSound("assets/background.mp3");
   clickSound = loadSound("assets/clickSound.wav");
   xImage = loadImage("assets/x.png");
 }
-
+ 
 function setup() {
   let myCanvas = createCanvas(windowWidth * 0.8, windowHeight * 0.8);
   myCanvas.position(windowWidth * 0.1, windowHeight * 0.1);
@@ -22,28 +22,27 @@ function setup() {
   cols = grid[0].length;
   cellWidth = width/cols;
   cellHeight = height/rows;
-
+ 
   
 }
-
+ 
 function draw() {
   background(220);
-  displayGrid(); 
+  displayGrid();
+  checkWinner();
 }
-
+ 
 function mousePressed() {
   let x = Math.floor(mouseX / cellWidth);
   let y = Math.floor(mouseY / cellHeight);
-
+ 
   if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0) { // only makes a sound when in the grid
     clickSound.play();
-    turns += 1;
   }
-  if (turns > 3) {
-    checkWinner();
-  }
+ 
+  toggleCell(x, y);   
 }
-
+ 
 function toggleCell(x, y) {
   //check that the coordinates are in the array
   if (x >= 0 && x < cols && y >= 0 && y < rows) {
@@ -52,8 +51,8 @@ function toggleCell(x, y) {
     }
   }
 }
-
-
+ 
+ 
 function displayGrid() {
   for (let y=0; y<rows; y++) {
     for (let x=0; x<cols; x++) {
@@ -68,7 +67,7 @@ function displayGrid() {
     }
   }
 }
-
+ 
 function createEmptyGrid(cols, rows) {
   let empty = [];
   for (let y=0; y<rows; y++) {
@@ -82,29 +81,51 @@ function createEmptyGrid(cols, rows) {
 
 function checkWinner() {
   let winCondition = 0;
-<<<<<<< HEAD:Simon Says/sketch.js
+  let diagCount = 0; //counter for the diagonal function
+  let horWin = 0; 
+  let vertWin = 0;
+  //horizontal
   for (let y = 0; y < rows; y++) {
-    for (let x = 0; y < rows; x++){
-=======
-  for (let y=0; y<rows; y++) {
-    for (let x=0; x<cols; x++) {
->>>>>>> 15c575456b3f0c37c9adab3e16bd1e4d96c19615:tik tak toe/sketch.js
+    for (let x = 0; x < cols; x++) {
       if (grid[y][x] === 1) {
-        winCondition++;
+        winCondition ++;
       }
     }
-    if (winCondition === 3) {
-      console.log("you win");
+    if (winCondition === 3 && horWin === 0 && vertWin === 0) {
+      console.log("win");
+      horWin += 1;
     }
     else {
-<<<<<<< HEAD:Simon Says/sketch.js
-      winCondtion = 0;
-    }
-  }
-}
-=======
       winCondition = 0;
     }
   }
+  //verticle
+  for (let x = 0; x < rows; x++) {
+    for (let y = 0; y < cols; y++) {
+      if (grid[y][x] === 1){
+        winCondition ++;
+      }
+    }
+    if (winCondition === 3 && vertWin === 0 && horWin === 0) {
+      console.log("win");
+      vertWin += 1; 
+    }
+    else {
+      winCondition = 0;
+    }
+  }
+  //diagonal left top
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (grid[y][x] === 1 ){
+        winCondition ++;
+      
+      }
+    }
+    if (horWin === 0 && vertWin === 0 &&  diagCount === 3) {
+      console.log("win");
+    }
+  }
+
 }
->>>>>>> 15c575456b3f0c37c9adab3e16bd1e4d96c19615:tik tak toe/sketch.js
+
