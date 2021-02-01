@@ -1,4 +1,4 @@
-//Grid neighbours
+//tik tak toe
 
 let grid = createEmptyGrid(3, 3);
 let rows, cols, cellWidth, cellHeight;
@@ -42,12 +42,6 @@ function mousePressed() {
   if (turns > 3) {
     checkWinner();
   }
-
-  toggleCell(x, y);   //self
-  // toggleCell(x, y-1); //north
-  // toggleCell(x, y+1); //south
-  // toggleCell(x+1, y); //east
-  // toggleCell(x-1, y); //west
 }
 
 function toggleCell(x, y) {
@@ -88,8 +82,13 @@ function createEmptyGrid(cols, rows) {
 
 function checkWinner() {
   let winCondition = 0;
+<<<<<<< HEAD:Simon Says/sketch.js
   for (let y = 0; y < rows; y++) {
     for (let x = 0; y < rows; x++){
+=======
+  for (let y=0; y<rows; y++) {
+    for (let x=0; x<cols; x++) {
+>>>>>>> 15c575456b3f0c37c9adab3e16bd1e4d96c19615:tik tak toe/sketch.js
       if (grid[y][x] === 1) {
         winCondition++;
       }
@@ -98,7 +97,14 @@ function checkWinner() {
       console.log("you win");
     }
     else {
+<<<<<<< HEAD:Simon Says/sketch.js
       winCondtion = 0;
     }
   }
 }
+=======
+      winCondition = 0;
+    }
+  }
+}
+>>>>>>> 15c575456b3f0c37c9adab3e16bd1e4d96c19615:tik tak toe/sketch.js
