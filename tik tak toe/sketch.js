@@ -183,22 +183,21 @@ function checkWinnerBlue() { //checks to see if blue player has won
   }
 }
 
-
 function winScreenGreen() {
   background("green");
-  textAlign(CENTER, CENTER)
-  textFont("Tahoma")
+  textAlign(CENTER, CENTER);
+  textFont("Tahoma");
   textSize(30);
-  fill("black")
+  fill("black");
   text("Green Wins!", width/2, height/2);
-  fill("black")
+  fill("black");
 }
 
 function winScreenBlue() {
   background("green");
-  textAlign(CENTER, CENTER)
-  textFont("Tahoma")
+  textAlign(CENTER, CENTER);
+  textFont("Tahoma");
   textSize(30);
-  fill("black")
+  fill("black");
   text("Blue Wins!", width/2, height/2);
 }
