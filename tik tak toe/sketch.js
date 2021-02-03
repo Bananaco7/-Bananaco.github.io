@@ -201,3 +201,12 @@ function winScreenBlue() {
   fill("black");
   text("Blue Wins!", width/2, height/2);
 }
+
+
+function checkDraw() {
+  for (let x = 0; x < rows; x++) {
+    for (let y = 0; y < cols; y++) {
+      if
+    }
+  }
+}
