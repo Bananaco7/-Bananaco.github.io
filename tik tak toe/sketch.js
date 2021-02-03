@@ -7,6 +7,19 @@ let bgMusic;
 let clickSound;
 let xImage;
 let turns = 0;
+let resetButton = false;
+let resetx; 
+let resety; 
+let resetw = 100;
+let reseth = 75;
+let startScreen = true;
+let coopButton = false;
+let coopx = 600;
+let coopy = 200;
+let coopw = 100;
+let cooph = 75;
+
+
  
 function preload() {
   bgMusic = loadSound("assets/background.mp3");
@@ -17,6 +30,8 @@ function preload() {
 function setup() {
   let myCanvas = createCanvas(windowWidth * 0.8, windowHeight * 0.8);
   myCanvas.position(windowWidth * 0.1, windowHeight * 0.1);
+  resetw = (windowWidth * 0.8)/2 - resetw;
+  reseth = (windowHeight * 0.8)/2 - reseth;
   bgMusic.loop();
   rows = grid.length;
   cols = grid[0].length;
@@ -27,10 +42,28 @@ function setup() {
 }
  
 function draw() {
-  background(220);
-  displayGrid();
-  checkWinnerGreen();
-  checkWinnerBlue();
+  if (startScreen){
+    clear();
+    background(66, 135, 245);
+    textAlign(CENTER, CENTER);
+    textFont("Tahoma");
+    textSize(50);
+    fill("black");
+    text("TIK TAK TOE!", width/2, height/2);
+    fill("black");
+    rect(coopx, coopy, coopw, cooph);
+    if (coopButton === true) {
+      startScreen = false;
+    }
+    
+  }
+  if (startScreen !== true) {
+    background(220);
+    displayGrid();
+    checkWinnerGreen();
+    checkWinnerBlue();
+    checkDraw();
+  }
 }
  
 function mousePressed() {
@@ -41,8 +74,14 @@ function mousePressed() {
     clickSound.play();
     turns += 1;
   }
- 
-  toggleCell(x, y);   
+  toggleCell(x, y);  
+
+  if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth) {
+    resetButton = !resetButton;
+  }
+  if (mouseX > coopx && mouseX < coopx + coopw && mouseY > coopy && mouseY < coopy + cooph) {
+    coopButton = !coopButton;
+  }
 }
  
 function toggleCell(x, y) {
@@ -191,6 +230,11 @@ function winScreenGreen() {
   fill("black");
   text("Green Wins!", width/2, height/2);
   fill("black");
+  if (resetButton) {
+    startScreen = true;
+  } 
+  fill("white");
+  rect(resetx, resety, resetw, reseth);
 }
 
 function winScreenBlue() {
@@ -200,13 +244,40 @@ function winScreenBlue() {
   textSize(30);
   fill("black");
   text("Blue Wins!", width/2, height/2);
+  if (resetButton) {
+    startScreen = true;
+  } 
+  fill("white");
+  rect(resetx, resety, resetw, reseth);
+}
+
+function drawScreen() {
+  background("black");
+  textAlign(CENTER, CENTER);
+  textFont("Tahoma");
+  textSize(30);
+  fill("white");
+  text("It's a Draw!", width/2, height/2);
+  if (resetButton) {
+    startScreen = true;
+  } 
+  fill("white");
+  rect(resetx, resety, resetw, reseth);
 }
 
 
 function checkDraw() {
+  let drawCounter = 0;
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
-      if
+      if (grid[y][x] === 1 || grid[y][x] === 2) {
+        drawCounter ++;
+      }
     }
   }
+  if (drawCounter === 9) {
+    drawScreen();
+  }
 }
+
+
