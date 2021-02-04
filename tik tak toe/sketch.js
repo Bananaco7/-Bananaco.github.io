@@ -7,11 +7,11 @@ let bgMusic;
 let clickSound;
 let xImage;
 let turns = 0;
-let resetButton = false;
+let resetButton = true;
 let resetx; 
-let resety; 
-let resetw = 100;
-let reseth = 75;
+let resety;
+let resetw;
+let reseth;
 let startScreen = true;
 let coopButton = false;
 let coopx = 600;
@@ -30,8 +30,13 @@ function preload() {
 function setup() {
   let myCanvas = createCanvas(windowWidth * 0.8, windowHeight * 0.8);
   myCanvas.position(windowWidth * 0.1, windowHeight * 0.1);
-  resetw = (windowWidth * 0.8)/2 - resetw;
-  reseth = (windowHeight * 0.8)/2 - reseth;
+
+  //reset button placement 
+  resetw = 100;
+  reseth = 75;
+  resetx = (windowWidth * 0.8)/2 - resetw/2;
+  resety = (windowHeight * 0.8)/2 + 50;
+
   bgMusic.loop();
   rows = grid.length;
   cols = grid[0].length;
@@ -42,8 +47,10 @@ function setup() {
 }
  
 function draw() {
+
   if (startScreen){
-    clear();
+    resetGrid();
+    resetButton = true;
     background(66, 135, 245);
     textAlign(CENTER, CENTER);
     textFont("Tahoma");
@@ -63,12 +70,23 @@ function draw() {
     checkWinnerGreen();
     checkWinnerBlue();
     checkDraw();
+    if (resetButton === false) {
+      clear();
+      coopButton = false;
+      startScreen = true;
+      console.log("did");
+    }
   }
 }
  
 function mousePressed() {
   let x = Math.floor(mouseX / cellWidth);
   let y = Math.floor(mouseY / cellHeight);
+  resetw = 100;
+  reseth = 75;
+  resetx = (windowWidth * 0.8)/2 - resetw/2;
+  resety = (windowHeight * 0.8)/2 + 50;
+
  
   if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0) { // only makes a sound when in the grid
     clickSound.play();
@@ -230,9 +248,6 @@ function winScreenGreen() {
   fill("black");
   text("Green Wins!", width/2, height/2);
   fill("black");
-  if (resetButton) {
-    startScreen = true;
-  } 
   fill("white");
   rect(resetx, resety, resetw, reseth);
 }
@@ -244,9 +259,6 @@ function winScreenBlue() {
   textSize(30);
   fill("black");
   text("Blue Wins!", width/2, height/2);
-  if (resetButton) {
-    startScreen = true;
-  } 
   fill("white");
   rect(resetx, resety, resetw, reseth);
 }
@@ -258,9 +270,6 @@ function drawScreen() {
   textSize(30);
   fill("white");
   text("It's a Draw!", width/2, height/2);
-  if (resetButton) {
-    startScreen = true;
-  } 
   fill("white");
   rect(resetx, resety, resetw, reseth);
 }
@@ -280,4 +289,12 @@ function checkDraw() {
   }
 }
 
-
+function resetGrid() {
+  for (let x = 0; x < rows; x++) {
+    for (let y = 0; y < cols; y++) {
+      if (grid[y][x] === 2 || grid[y][x] === 1) {
+        grid[y][x] = 0;
+      }
+    }
+  }
+}
