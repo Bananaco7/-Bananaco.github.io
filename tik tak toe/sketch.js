@@ -1,4 +1,4 @@
-//tik tak toe
+//tik tac toe
 
 let grid = createEmptyGrid(3, 3);
 let rows, cols, cellWidth, cellHeight;
@@ -7,17 +7,32 @@ let bgMusic;
 let clickSound;
 let xImage;
 let turns = 0;
-let resetButton = true;
-let resetx; 
-let resety;
-let resetw;
-let reseth;
-let startScreen = true;
-let coopButton = false;
-let coopx = 600;
-let coopy = 200;
-let coopw = 100;
-let cooph = 75;
+let aiTurns = 1;
+
+let resetButton = false; //setup for the reset button
+let resetx; //x cor
+let resety; //y cor
+let resetw; //width
+let reseth; //height
+
+let startScreen = true; //state variable for the startScreen
+
+let coopButton = false; //setup for the coop game mode button
+let coopx;
+let coopy;
+let coopw;
+let cooph;
+
+let aiButton = false;
+let aix;
+let aiy;
+let aiw;
+let aih;
+
+let horWin = false; // allows the ai to know when the player is 1 move away from winning horizontally
+let vertWin = false;
+let leftDiagWin = 0;
+let rightDiagWin = 0;
 
 
  
@@ -37,6 +52,18 @@ function setup() {
   resetx = (windowWidth * 0.8)/2 - resetw/2;
   resety = (windowHeight * 0.8)/2 + 50;
 
+  //COOP player button placement
+  coopw = 150;
+  cooph = 50
+  coopx = 400;
+  coopy = (windowHeight * 0.8)/2 + 50;
+
+  //AI game mode button placement
+  aiw = 150;
+  aih = 50;
+  aix = 650;
+  aiy = (windowHeight * 0.8)/2 + 50;
+
   bgMusic.loop();
   rows = grid.length;
   cols = grid[0].length;
@@ -50,7 +77,7 @@ function draw() {
 
   if (startScreen){
     resetGrid();
-    resetButton = true;
+    resetButton = false;
     background(66, 135, 245);
     textAlign(CENTER, CENTER);
     textFont("Tahoma");
@@ -59,22 +86,38 @@ function draw() {
     text("TIK TAK TOE!", width/2, height/2);
     fill("black");
     rect(coopx, coopy, coopw, cooph);
+    rect(aix, aiy, aiw, aih);
     if (coopButton === true) {
       startScreen = false;
     }
-    
+    if (aiButton === true) {
+      startScreen = false;
+    }
   }
-  if (startScreen !== true) {
+
+  if (coopButton === true) {
     background(220);
     displayGrid();
     checkWinnerGreen();
     checkWinnerBlue();
     checkDraw();
-    if (resetButton === false) {
+    if (resetButton === true) {
       clear();
       coopButton = false;
       startScreen = true;
-      console.log("did");
+    }
+  }
+  if (aiButton === true) {
+    background(220);
+    displayGrid();
+    checkWinnerGreen();
+    checkWinnerBlue();
+    checkDraw();
+    aiMove();
+    if (resetButton === true) {
+      clear();
+      aiButton = false;
+      startScreen = true;
     }
   }
 }
@@ -82,27 +125,40 @@ function draw() {
 function mousePressed() {
   let x = Math.floor(mouseX / cellWidth);
   let y = Math.floor(mouseY / cellHeight);
-  resetw = 100;
-  reseth = 75;
-  resetx = (windowWidth * 0.8)/2 - resetw/2;
-  resety = (windowHeight * 0.8)/2 + 50;
 
- 
-  if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0) { // only makes a sound when in the grid
+  if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && coopButton === true) { // only makes a sound when in the grid
     clickSound.play();
-    turns += 1;
+    turns += 1; //keeps count of the turns 
   }
-  toggleCell(x, y);  
 
-  if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth) {
+  if (coopButton === true) { //grid toggle mode for 2 players
+    toggleCellCoop(x, y);  
+  }
+
+  if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && aiButton === true) { // only makes a sound when in the grid
+    clickSound.play();
+    turns += 1; //keeps count of the turns 
+    aiTurns += 1;
+  }
+
+  if (aiButton === true) { //grid toggle for ai mode
+    toggleCellAi(x, y);
+  }
+
+  // code for the button presses
+  if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth) { // reset
     resetButton = !resetButton;
   }
-  if (mouseX > coopx && mouseX < coopx + coopw && mouseY > coopy && mouseY < coopy + cooph) {
+  if (mouseX > coopx && mouseX < coopx + coopw && mouseY > coopy && mouseY < coopy + cooph) { //coop mode
     coopButton = !coopButton;
   }
+  if (mouseX > aix && mouseX < aix + aiw && mouseY > aiy && mouseY < aiy + aih) { // ai mode
+    aiButton = !aiButton;
+  }
+
 }
  
-function toggleCell(x, y) {
+function toggleCellCoop(x, y) {
   //check that the coordinates are in the array
   if (x >= 0 && x < cols && y >= 0 && y < rows) {
     if (grid[y][x] === 0 && turns % 2 !== 0) {
@@ -110,6 +166,17 @@ function toggleCell(x, y) {
     }
     if (grid[y][x] === 0 && turns % 2 === 0) {
       grid[y][x] = 2;
+    }
+  }
+}
+
+function toggleCellAi(x, y) {
+  //check that the coordinates are in the array
+  if (x >= 0 && x < cols && y >= 0 && y < rows) {
+    turns += 1;
+    if (grid[y][x] === 0 && turns % 2 === 0) {
+      grid[y][x] = 1;
+      console.log("yes");
     }
   }
 }
@@ -155,6 +222,10 @@ function checkWinnerGreen() { //checks to see if green player has won
         winCondition ++;
       }
     }
+    if (winCondition === 2) {
+      horWin = true;
+      console.log("ahh");
+    }
     if (winCondition === 3 ) {
       winScreenGreen();
 
@@ -170,6 +241,9 @@ function checkWinnerGreen() { //checks to see if green player has won
         winCondition ++;
       }
     }
+    if (winCondition === 2) {
+      vertWin = true;
+    }
     if (winCondition === 3) {
       winScreenGreen();
 
@@ -181,10 +255,32 @@ function checkWinnerGreen() { //checks to see if green player has won
   //diagonal 
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
+      if (grid[0][0] === 1 && grid[1][1] === 1) {
+        leftDiagWin = 1;
+      }
+      if (grid[1][1] === 1 && grid[2][2] === 1 ) {
+        leftDiagWin = 2;
+      }
+      if (grid[0][0] === 1 && grid[2][2] === 1) {
+        leftDiagWin = 3;
+      }
       if (grid[0][0] === 1 && grid[1][1] === 1 && grid[2][2] === 1 ) {
         winScreenGreen();
       }
-      else if(grid[0][2] === 1 && grid[1][1] === 1 && grid[2][0] === 1) {
+
+
+
+
+      if (grid[0][2] === 1 && grid[1][1] === 1) {
+        rightDiagWin = 1;
+      }
+      if (grid[1][1] === 1 && grid[2][0] === 1 ) {
+        rightDiagWin = 2;
+      }
+      if (grid[0][2] === 1 && grid[2][0] === 1) {
+        rightDiagWin = 3;
+      }
+      if(grid[0][2] === 1 && grid[1][1] === 1 && grid[2][0] === 1) {
         winScreenGreen();
       }
     }
@@ -296,5 +392,40 @@ function resetGrid() {
         grid[y][x] = 0;
       }
     }
+  }
+}
+
+function aiMove() {
+  // blocking code that blocks the players win if possible
+  let winCondition = 0;
+  let rowsChecked = 0;
+  if (horWin === true) {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        if (grid[x][y] === 1) {
+          winCondition++;
+          console.log("wut");
+        }
+      }
+      rowsChecked++;
+      if (winCondition === 2) {
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < rowsChecked; x++) {
+            if (grid[y][x] === 0) {
+              grid[y][x] = 2;
+              console.log("works");
+            }
+          }
+        }
+      }
+      else {
+        winCondition = 0;
+      }
+    }
+  }
+  if (horWin === false && aiTurns % 2 === 0) {
+    grid[1][1] = 0;
+    console.log("bruh");
+    aiTurns++;
   }
 }
