@@ -113,7 +113,6 @@ function draw() {
     checkWinnerGreen();
     checkWinnerBlue();
     checkDraw();
-    aiMove();
     if (resetButton === true) {
       clear();
       aiButton = false;
@@ -224,6 +223,7 @@ function checkWinnerGreen() { //checks to see if green player has won
     }
     if (winCondition === 2) {
       horWin = true;
+      aiMove();
       console.log("ahh");
     }
     if (winCondition === 3 ) {
@@ -324,6 +324,7 @@ function checkWinnerBlue() { //checks to see if blue player has won
     }
   }
   //diagonal 
+
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
       if (grid[0][0] === 2 && grid[1][1] === 2 && grid[2][2] === 2 ) {
@@ -399,7 +400,7 @@ function aiMove() {
   // blocking code that blocks the players win if possible
   let winCondition = 0;
   let rowsChecked = 0;
-  if (horWin === true) {
+  if (horWin === true && aiTurns % 2 === 0) {
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
         if (grid[x][y] === 1) {
@@ -413,6 +414,7 @@ function aiMove() {
           for (let x = 0; x < rowsChecked; x++) {
             if (grid[y][x] === 0) {
               grid[y][x] = 2;
+              aiTurns ++;
               console.log("works");
             }
           }
