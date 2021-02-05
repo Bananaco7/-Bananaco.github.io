@@ -7,7 +7,6 @@ let bgMusic;
 let clickSound;
 let xImage;
 let turns = 0;
-let aiTurns = 1;
 
 let resetButton = false; //setup for the reset button
 let resetx; //x cor
@@ -33,6 +32,7 @@ let horWin = false; // allows the ai to know when the player is 1 move away from
 let vertWin = false;
 let leftDiagWin = 0;
 let rightDiagWin = 0;
+let aiNextMove = 0;
 
 
  
@@ -54,7 +54,7 @@ function setup() {
 
   //COOP player button placement
   coopw = 150;
-  cooph = 50
+  cooph = 50;
   coopx = 400;
   coopy = (windowHeight * 0.8)/2 + 50;
 
@@ -113,6 +113,7 @@ function draw() {
     checkWinnerGreen();
     checkWinnerBlue();
     checkDraw();
+    checkForAi();
     if (resetButton === true) {
       clear();
       aiButton = false;
@@ -137,7 +138,6 @@ function mousePressed() {
   if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && aiButton === true) { // only makes a sound when in the grid
     clickSound.play();
     turns += 1; //keeps count of the turns 
-    aiTurns += 1;
   }
 
   if (aiButton === true) { //grid toggle for ai mode
@@ -221,11 +221,6 @@ function checkWinnerGreen() { //checks to see if green player has won
         winCondition ++;
       }
     }
-    if (winCondition === 2) {
-      horWin = true;
-      aiMove();
-      console.log("ahh");
-    }
     if (winCondition === 3 ) {
       winScreenGreen();
 
@@ -267,8 +262,6 @@ function checkWinnerGreen() { //checks to see if green player has won
       if (grid[0][0] === 1 && grid[1][1] === 1 && grid[2][2] === 1 ) {
         winScreenGreen();
       }
-
-
 
 
       if (grid[0][2] === 1 && grid[1][1] === 1) {
@@ -396,38 +389,34 @@ function resetGrid() {
   }
 }
 
-function aiMove() {
-  // blocking code that blocks the players win if possible
-  let winCondition = 0;
-  let rowsChecked = 0;
-  if (horWin === true && aiTurns % 2 === 0) {
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
-        if (grid[x][y] === 1) {
-          winCondition++;
-          console.log("wut");
-        }
-      }
-      rowsChecked++;
-      if (winCondition === 2) {
-        for (let y = 0; y < rows; y++) {
-          for (let x = 0; x < rowsChecked; x++) {
-            if (grid[y][x] === 0) {
-              grid[y][x] = 2;
-              aiTurns ++;
-              console.log("works");
-            }
-          }
-        }
-      }
-      else {
-        winCondition = 0;
-      }
+
+function checkForAi() {
+  //horizontal check
+  let aiTurns = 1;
+  for (let y = 0; y < grid.length; y++) {
+    if (grid[y][0] === 1 && grid[y][1] === 1 && aiTurns % 2 !== 0) {
+      grid[y][2] = 2;
+    }
+    if (grid[y][1] === 1 && grid[y][2] === 1 && aiTurns % 2 !== 0) {
+      grid[y][0] = 2;
+    }
+    if (grid[y][0] === 1 && grid[y][2] === 1 && aiTurns % 2 !== 0) {
+      grid[y][1] = 2;
     }
   }
-  if (horWin === false && aiTurns % 2 === 0) {
-    grid[1][1] = 0;
-    console.log("bruh");
-    aiTurns++;
+  //vertical check
+  for (let x = 0; x < grid.length; x++) {
+    if (grid[0][x] === 1 && grid[1][x] === 1 && aiTurns % 2 !== 0) {
+      grid[2][x] = 2;
+    }
+    if (grid[1][x] === 1 && grid[2][x] === 1 && aiTurns % 2 !== 0) {
+      grid[0][x] = 2;
+    }
+    if (grid[0][x] === 1 && grid[2][x] === 1 && aiTurns % 2 !== 0) {
+      grid[1][x] = 2;
+    }
   }
+  //diagonal check
+  for (let x = 0; x < rows; x++) {
+    for (let y = 0; y < cols; y++) {
 }
