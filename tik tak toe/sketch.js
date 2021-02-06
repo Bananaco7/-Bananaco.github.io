@@ -7,6 +7,7 @@ let bgMusic;
 let clickSound;
 let xImage;
 let turns = 0;
+let aiTurns = 0;
 
 let resetButton = false; //setup for the reset button
 let resetx; //x cor
@@ -32,7 +33,7 @@ let horWin = false; // allows the ai to know when the player is 1 move away from
 let vertWin = false;
 let leftDiagWin = 0;
 let rightDiagWin = 0;
-let aiNextMove = 0;
+let moved = false;
 
 
  
@@ -113,7 +114,9 @@ function draw() {
     checkWinnerGreen();
     checkWinnerBlue();
     checkDraw();
-    checkForAi();
+    checkForAiVert();
+    checkForAiHor();
+    checkForAiDiag();
     if (resetButton === true) {
       clear();
       aiButton = false;
@@ -128,20 +131,14 @@ function mousePressed() {
 
   if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && coopButton === true) { // only makes a sound when in the grid
     clickSound.play();
+    toggleCellCoop(x, y); 
     turns += 1; //keeps count of the turns 
   }
 
-  if (coopButton === true) { //grid toggle mode for 2 players
-    toggleCellCoop(x, y);  
-  }
-
-  if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && aiButton === true) { // only makes a sound when in the grid
+  if (x >= 0 && x < cols && y >= 0 && y < rows && grid[y][x] === 0 && aiButton === true && turns % 2 === 0) { // only makes a sound when in the grid
     clickSound.play();
-    turns += 1; //keeps count of the turns 
-  }
-
-  if (aiButton === true) { //grid toggle for ai mode
     toggleCellAi(x, y);
+    turns ++; //keeps count of the turns 
   }
 
   // code for the button presses
@@ -172,7 +169,6 @@ function toggleCellCoop(x, y) {
 function toggleCellAi(x, y) {
   //check that the coordinates are in the array
   if (x >= 0 && x < cols && y >= 0 && y < rows) {
-    turns += 1;
     if (grid[y][x] === 0 && turns % 2 === 0) {
       grid[y][x] = 1;
       console.log("yes");
@@ -390,33 +386,91 @@ function resetGrid() {
 }
 
 
-function checkForAi() {
-  //horizontal check
-  let aiTurns = 1;
-  for (let y = 0; y < grid.length; y++) {
-    if (grid[y][0] === 1 && grid[y][1] === 1 && aiTurns % 2 !== 0) {
-      grid[y][2] = 2;
-    }
-    if (grid[y][1] === 1 && grid[y][2] === 1 && aiTurns % 2 !== 0) {
-      grid[y][0] = 2;
-    }
-    if (grid[y][0] === 1 && grid[y][2] === 1 && aiTurns % 2 !== 0) {
-      grid[y][1] = 2;
-    }
-  }
-  //vertical check
+function checkForAiVert() {
+    //vertical check
   for (let x = 0; x < grid.length; x++) {
-    if (grid[0][x] === 1 && grid[1][x] === 1 && aiTurns % 2 !== 0) {
+    if (grid[0][x] === 1 && grid[1][x] === 1 && turns % 2 !== 0 && grid[2][x] !== 2) {
       grid[2][x] = 2;
+      turns++;
+      !moved;
+      console.log("hello");
     }
-    if (grid[1][x] === 1 && grid[2][x] === 1 && aiTurns % 2 !== 0) {
+    if (grid[1][x] === 1 && grid[2][x] === 1 && turns % 2 !== 0 && grid[0][x] !== 2) {
       grid[0][x] = 2;
+      turns++;
+      !moved;
     }
-    if (grid[0][x] === 1 && grid[2][x] === 1 && aiTurns % 2 !== 0) {
+    if (grid[0][x] === 1 && grid[2][x] === 1 && turns % 2 !== 0 && grid[1][x] !== 2) {
       grid[1][x] = 2;
+      turns++;
+      !moved;
     }
   }
-  //diagonal check
-  for (let x = 0; x < rows; x++) {
-    for (let y = 0; y < cols; y++) {
+  moved = false;
+}
+
+function checkForAiHor() {
+  //horizontal check
+  for (let y = 0; y < grid.length; y++) {
+    if (grid[y][0] === 1 && grid[y][1] === 1 && turns % 2 !== 0 && grid[y][2] !== 2) {
+      grid[y][2] = 2;
+      turns++;
+      !moved;
+    }
+    if (grid[y][1] === 1 && grid[y][2] === 1 && turns % 2 !== 0 && grid[y][0] !== 2) {
+      grid[y][0] = 2;
+      turns++;
+      !moved;
+    }
+    if (grid[y][0] === 1 && grid[y][2] === 1 && turns % 2 !== 0 && grid[y][1] !== 2) {
+      grid[y][1] = 2;
+      turns++;
+      !moved;
+    }
+  }
+  moved = false;
+}
+
+function checkForAiDiag() {
+  //diagonal check from top left
+  if (grid[0][0] === 1 && grid[1][1] === 1 && turns % 2 !== 0 && grid[2][2] !== 2) {
+    grid[2][2] = 2;
+    turns++;
+    !moved;
+  }
+  if (grid[1][1] === 1 && grid[2][2] === 1 && turns % 2 !== 0 && grid[0][0] !== 2) {
+    grid[0][0] = 2;
+    turns++;
+    !moved;
+  }
+  if (grid[0][0] === 1 && grid[2][2] === 1 && turns % 2 !== 0 && grid[1][1] !== 2) {
+    grid[1][1] = 2;
+    turns++;
+    !moved;
+  }
+
+  //diagonal check from top right
+  if (grid[0][2] === 1 && grid[1][1] === 1 && turns % 2 !== 0 && grid[2][0] !== 2) {
+    grid[2][0] = 2;
+    turns++;
+    !moved;
+  }
+  if (grid[1][1] === 1 && grid[2][0] === 1 && turns % 2 !== 0 && grid[0][2] !== 2) {
+    grid[0][2] = 2;
+    turns++;
+    !moved;
+  }
+  if (grid[0][2] === 1 && grid[2][0] === 1 && turns % 2 !== 0 && grid[1][1] !== 2) {
+    grid[1][1] = 2;
+    turns++;
+    !moved;
+  }
+
+
+  if ( turns % 2 !== 0 && moved === false) {
+    turns++;
+    grid[ceil(random(0,2))][ceil(random(0,2))] = 2
+    console.log("it works");
+  }
+  moved = false;
 }
