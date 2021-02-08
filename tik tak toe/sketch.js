@@ -1,7 +1,7 @@
 // tik tac toe
 // Noah Lim
 // Computer Science 30 
-// Teacher: Mr. Schellenburg
+// Teacher: Mr. Schellenberg
 // 2D Array project
 
 let grid = createEmptyGrid(3, 3); // creates the 3X3 grid
