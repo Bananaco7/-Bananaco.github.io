@@ -23,6 +23,7 @@ let resetx; //x cor
 let resety; //y cor
 let resetw; //width
 let reseth; //height
+let resetCheck = false; // for the rest button to be toggled on the win screen
 
 let startScreen = true; //state variable for the startScreen
 
@@ -157,10 +158,11 @@ function mousePressed() { // function that triggers when the mouse is pressed
   }
 
   // code for the button presses
-  if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth) { // reset
+  if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth && resetCheck === true) { // reset
     accept.play()
     resetButton = !resetButton;
     turns = 0; //resets the turns
+    resetCheck = false;
   }
   if (mouseX > coopx && mouseX < coopx + coopw && mouseY > coopy && mouseY < coopy + cooph && startScreen === true) { //coop mode
     accept.play();
@@ -328,6 +330,7 @@ function checkWinnerO() { //checks to see if blue player has won
 
 function winScreenX() { // displays the win for x
   background("green");
+  resetCheck = true;
   textAlign(CENTER, CENTER);
   textFont("Tahoma");
   textSize(30);
@@ -343,6 +346,7 @@ function winScreenX() { // displays the win for x
 
 function winScreenO() { // displays the win for o
   background("green");
+  resetCheck = true;
   textAlign(CENTER, CENTER);
   textFont("Tahoma");
   textSize(30);
@@ -357,6 +361,7 @@ function winScreenO() { // displays the win for o
 
 function drawScreen() { // displays the draw
   background("grey");
+  resetCheck = true;
   textAlign(CENTER, CENTER);
   textFont("Tahoma");
   textSize(30);
