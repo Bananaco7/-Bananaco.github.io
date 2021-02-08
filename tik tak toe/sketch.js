@@ -23,7 +23,7 @@ let resetx; //x cor
 let resety; //y cor
 let resetw; //width
 let reseth; //height
-let resetCheck = false; // for the rest button to be toggled on the win screen
+let resetCheck = false; // for the reset button to be toggled on the win screen
 
 let startScreen = true; //state variable for the startScreen
 
@@ -95,7 +95,7 @@ function draw() {
     textFont("Tahoma");
     textSize(50);
     fill("black");
-    text("TIK TAC TOE!", width/2, height/2); //game title
+    text("TIC TAC TOE!", width/2, height/2); //game title
     fill("black");
     rect(coopx, coopy, coopw, cooph, 30);
     rect(aix, aiy, aiw, aih, 30);
@@ -103,7 +103,7 @@ function draw() {
     fill("white");
     text("2P Mode", 475, 435); //text for the buttons
     text("AI Mode", 725, 435);
-    text("Tik Tac Toe is a pretty boring game", width/2, 600);
+    text("Tic Tac Toe is a pretty boring game", width/2, 600);
     if (coopButton === true) { //starts the coop game mode
       startScreen = false;
     }
