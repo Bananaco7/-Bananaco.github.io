@@ -99,7 +99,7 @@ function draw() {
     fill("black");
     rect(coopx, coopy, coopw, cooph, 30);
     rect(aix, aiy, aiw, aih, 30);
-    textSize(28)
+    textSize(28);
     fill("white");
     text("2P Mode", 475, 435); //text for the buttons
     text("AI Mode", 725, 435);
@@ -159,7 +159,7 @@ function mousePressed() { // function that triggers when the mouse is pressed
 
   // code for the button presses
   if (mouseX > resetx && mouseX < resetx + resetw && mouseY > resety && mouseY < resety + reseth && resetCheck === true) { // reset
-    accept.play()
+    accept.play();
     resetButton = !resetButton;
     turns = 0; //resets the turns
     resetCheck = false;
